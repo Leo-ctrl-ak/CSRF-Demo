@@ -54,6 +54,7 @@ DVWA Low 安全等级的 CSRF 模块存在以下缺陷：
 - **依赖 Cookie 认证**：服务器仅通过 PHPSESSID 判断用户身份。
 - **缺乏 CSRF 防护**：修改密码的接口没有校验 CSRF Token，且完全通过 GET 请求传递参数。
 - **Same-Origin Policy 绕过**：当一个网站（攻击者）向另一个网站（DVWA）发送请求时，浏览器会自动携带 DVWA 的 Cookie，从而使服务器误以为是用户本人的操作。
+- 核心总结： DVWA 的 CSRF 漏洞本质上是服务器未验证请求的来源（Origin/Referer），也没有绑定用户会话的随机 Token，导致攻击者可以冒充受害者的身份发送恶意请求。
 
 ## 🛡️ 防御方案
 针对 CSRF 漏洞，以下是几种常见的防御措施：
@@ -68,6 +69,8 @@ DVWA Low 安全等级的 CSRF 模块存在以下缺陷：
 服务器检查 HTTP Referer 头，确保请求来源于本站域名内部。虽然可以通过代码伪造 Referer，但实施难度较高，可作为辅助手段。
 
 ### 4. 使用 POST 请求代替 GET
+## 📌 最佳实践建议
+在实际开发中，**应优先采用 CSRF Token 机制**，并配合设置 Cookie 的 `SameSite` 属性（`SameSite=Strict` 或 `SameSite=Lax`），同时将敏感操作统一改为 POST 请求。多层防护叠加可显著降低 CSRF 风险。
 将敏感操作改为 POST 请求并不能完全防御 CSRF（攻击者仍可通过构造自动提交的 form 表单来绕过），但它增加了攻击者的利用成本，并符合 HTTP 语义规范。
 
 ## 📝 个人收获
@@ -91,3 +94,4 @@ DVWA Low 安全等级的 CSRF 模块存在以下缺陷：
 | `screenshots/02-csrf-payload.png` | 恶意 HTML 代码截图 |
 | `screenshots/03-csrf-success.png` | 攻击成功截图 |
 | `screenshots/04-csrf-verify.png` | 验证截图 |
+| `screenshots/04-csrf-verify.png` | 旧密码登录失败验证截图（辅助证明） |
